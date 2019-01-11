@@ -1,0 +1,7 @@
+FROM centos:7
+
+RUN yum update -y && yum install -y wget httpd php php-mysql && wget https://wordpress.org/latest.tar.gz && tar xf latest.tar.gz && mv wordpress/ /var/www/html && chown -R apache:apache
+
+WORKDIR /formation/docker/
+
+CMD ["httpd -DFOREGROUND"]
