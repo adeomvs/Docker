@@ -6,4 +6,4 @@ WORKDIR /formation/Docker
 
 ENTRYPOINT ["/usr/bin/cowsay"]
 
-CMD ["echo Hello World"]
+CMD ["Hello World"]
