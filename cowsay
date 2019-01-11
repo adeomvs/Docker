@@ -1,0 +1,9 @@
+FROM centos:7
+
+RUN yum update -y && yum install -y epel-release.noarch && yum install -y cowsay.noarch 
+
+WORKDIR /formation/Docker
+
+ENTRYPOINT ["/usr/bin/cowsay"]
+
+CMD ["echo Hello World"]
