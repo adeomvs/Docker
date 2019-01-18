@@ -1,0 +1,52 @@
+operationId: FibPost
+x-path: /fib
+x-method: post
+summary: Create a resource fib
+description: |
+  Create a resource fib
+  (add here additional informations)
+consumes:
+  - application/json
+produces:
+  - application/json
+externalDocs:
+  description: Project repository
+  url: http://github.com/adeo/XXX
+schemes:
+  - http
+  - https
+security: []
+tags:
+  - Fib
+parameters:
+  - name: n
+    in: query
+    type: integer
+    description: number n for Fibonacci
+  #- name: body
+  #  in: body
+  #  description : resource properties to create
+  #  schema:
+  #    $ref: '#/definitions/{{ operationId }}Request'
+responses:
+  201:
+    description: "Successfull operation. Return created resource"
+    schema:
+      $ref: '#/definitions/{{ operationId }}Response'
+x-flaskit:
+  enabled: true
+  swagger: true
+  audit: 3
+  stats: true
+  statsd: false
+  dryrun: true
+  cache: 0
+  loglevel: DEBUG
+  logbody: 1
+  logrequest: 3
+  consumer: true
+  consumerName: default
+  consumerMode: "force_async"             # "force_sync", "force_async", "request_choice"
+  # pagination: false
+  # paginationDefaultRange: 0-9              # all | <start>-<end>
+  # paginationArrayPath: "items"

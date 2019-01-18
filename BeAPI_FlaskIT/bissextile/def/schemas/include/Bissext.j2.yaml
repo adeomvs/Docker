@@ -1,0 +1,29 @@
+# this file descibe a Bissext CRUD object
+# it is included by schema files in 'def/apis/' : bissextList, bissextPost, bissextGet, bissextDelete, bissextPut
+description: "Bissext description"
+type: object
+additionalProperties: false
+#required: []
+properties:
+
+# INSERT BUSINESS OBJECT STRUCTURE HERE...
+
+{#- The following condition is evaluated for each endpoint at startup, to include/exclude some attributes inside object schema #}
+{#- This allow to have the same object schema file for many endpoints with little variation according to each endpoint #}
+{%- if operationId + QRType not in ["BissextPostRequest", "BissextPutRequest", "BissextDeleteRequest"] %}
+  # insert property for selected endpoints
+{%- endif %}
+
+  # insert property for all endpoints
+  my_property:
+    x-required: false
+    description: "bissext object custom property"
+    type: string
+  year:
+    x-required: false
+    description: "year"
+    type: integer
+  isBissext:
+    x-required: true
+    description: "bissext indicator"
+    type: boolean

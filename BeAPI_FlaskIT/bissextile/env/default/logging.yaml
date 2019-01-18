@@ -1,0 +1,39 @@
+# This is the project settings that can overwrite parts of flaskit global settings
+
+# variables used by templatization of logging settings
+vars:
+    # audit_log: log/audit.log
+    # stat_log: log/stat.log
+    # api_log: log/api.log
+    # cli_log: log/cli.log
+    # pytest_log: log/pytest.log
+
+    # A sample var definition
+    # api_log_Health: log/Health.log
+
+# add here specifics sections
+logging:
+
+    loggers:
+        # A sample logger for a specific endpoint
+        # flaskit.HealthGet:
+        #     handlers:
+        #         - api_log_Health
+        #     level: DEBUG
+        #     propagate: true    # propagate also to root logger
+            
+    handlers:
+        # A sample handler
+        # api_log_Health:
+        #     class : logging.handlers.RotatingFileHandler
+        #     formatter: core
+        #     filters:
+        #         - flaskit_filter
+        #     level   : DEBUG
+        #     filename: "<<<< vars.api_log_Health >>>>"
+        #     maxBytes: 1000000
+        #     backupCount: 2
+
+    formatters:
+
+    filters:

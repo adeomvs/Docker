@@ -1,0 +1,49 @@
+FROM centos/httpd-24-centos7
+
+USER 0
+
+SHELL ["/bin/bash","-c"]
+
+# heathcheck
+HEALTHCHECK --interval=5m --timeout=3s CMD bash bin/healthcheck.sh
+
+# for debug only (but not in k8s)
+RUN [ ! -d /run/secrets/kubernetes.io/serviceaccount ] && yum install -y vim sudo && echo 'default ALL=NOPASSWD: ALL' >> /etc/sudoers
+
+RUN yum update -y && \
+    yum install -y gcc python-devel python27-mod_wsgi python-pip jq && \
+    pip install --no-cache-dir --upgrade pip
+
+COPY . /tmp/src/
+RUN cp -R /tmp/src/{conf,def,env,data,resources,lib,bin,install/requirements.txt,install/pip.conf} /opt/app-root/src/ && \
+    cp /tmp/src/install/pipelines/deploy/unit_test.sh /opt/app-root/src/ || : && \
+    find /opt/app-root/src -name '*.pyc' -delete && \
+    mv /opt/app-root/src/env/default/docker-api.conf /opt/rh/httpd24/root/etc/httpd/conf.d/ && \
+    sed -i -e "/^#ServerName /a ServerName 127.0.0.1" /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
+    echo "#!/bin/bash" > /usr/local/bin/start.sh && \
+    echo "#source /opt/app-root/etc/generate_container_user" >> /usr/local/bin/start.sh && \
+    echo "exec \"\$@\"" >> /usr/local/bin/start.sh && \
+    chmod +x /usr/local/bin/start.sh && \
+    mkdir -p $HOME/.config/pip && mv pip.conf $HOME/.config/pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    mkdir log && chown 1001 log
+
+# for flaskit development only
+RUN [ -z $FLASKIT_DEV_MODE ] && true || ( \
+    pip install --no-cache-dir --upgrade --pre FlaskIT2 && \
+    chown -R 1001 /usr/lib/python2.7/site-packages/flaskit && \
+    chown -R 1001:1001 /opt/app-root/* )
+
+RUN yum remove kernel-headers yum-utils gcc -y && \
+    rpm -e --nodeps yum-plugin-fastestmirror yum-plugin-ovl && \
+    yum clean all
+
+USER 1001
+
+RUN fix-permissions /opt/app-root
+
+ENV FLASKIT_START_MODE apache
+
+WORKDIR /opt/app-root/src
+ENTRYPOINT ["/usr/local/bin/start.sh"]
+CMD ["bash", "bin/start.sh"]

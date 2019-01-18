@@ -1,0 +1,20 @@
+definitions:
+
+##### Response fields #####
+{%- set QRType = "Response" %}
+
+  "{{ operationId + QRType }}":
+    description: "Main response structure"
+    type: object
+    additionalProperties: false
+    required: [_metadata, item]
+    properties:
+      item:
+        $ref: "#/definitions/{{ operationId + QRType }}.item"
+      _metadata:
+        $ref: "#/definitions/{{ operationId + QRType }}.metadata"
+
+  "{{ operationId + QRType }}.item":
+    {{ include_file('Fib.j2.yaml') | indent(4) }}
+
+{{ include_file('FibResponseMetadata.j2.yaml') | indent(2, first=true) }}

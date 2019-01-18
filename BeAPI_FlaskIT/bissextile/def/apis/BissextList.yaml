@@ -1,0 +1,54 @@
+operationId: BissextList
+x-path: /bissext
+x-method: get
+summary: List resources bissext
+description: |
+  List resources bissext
+  (add here additional informations)
+consumes:
+  - application/json
+produces:
+  - application/json
+externalDocs:
+  description: Project repository
+  url: http://github.com/rochacbruno/flasgger
+schemes:
+  - http
+  - https
+security: []
+tags:
+  - Bissext
+parameters:
+  - name: filter
+    in: query
+    description : filter resources
+    type: string
+    pattern: "^[a-zA-Z0-9-_.]+$"
+    required: false
+responses:
+  200:
+    description: "Successfull operation. Return list of resources"
+    schema:
+      $ref: '#/definitions/{{ operationId }}Response'
+  206:
+    description: "Successfull operation. Return pagined list of resources"
+    schema:
+      $ref: '#/definitions/{{ operationId }}Response'
+x-flaskit:
+  enabled: true
+  swagger: true
+  audit: 3
+  stats: true
+  statsd: false
+  dryrun: false
+  cache: 0
+  loglevel: DEBUG
+  logbody: 1
+  logrequest: 3
+  consumer: false
+  consumerName: default
+  consumerMode: "force_async"             # "force_sync", "force_async", "request_choice"
+  pagination: true
+  paginationDefaultRange: 0-9              # all | <start>-<end>
+  paginationArrayPath: "items"
+

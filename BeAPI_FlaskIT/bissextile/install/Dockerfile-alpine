@@ -1,0 +1,55 @@
+FROM alpine:latest
+
+USER 0
+
+SHELL ["/bin/sh","-c"]
+
+# heathcheck
+HEALTHCHECK --interval=5m --timeout=3s CMD bash bin/healthcheck.sh
+
+# for debug only (but not in k8s)
+RUN [ ! -d /run/secrets/kubernetes.io/serviceaccount ] && apk add --no-cache sudo vim && echo 'default ALL=NOPASSWD: ALL' >> /etc/sudoers
+
+RUN apk update --no-cache && \
+	apk upgrade --no-cache && \
+    apk add --no-cache bash coreutils jq python py-pip python-dev gcc linux-headers libc-dev musl-dev && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir gunicorn futures
+
+WORKDIR /opt/flaskit
+COPY . /tmp/src/
+RUN mkdir -p /opt/flaskit && \
+    addgroup -g 1001 flaskit && \
+    adduser -u 1001 -S -G flaskit flaskit && \
+    cp -R /tmp/src/conf . && \
+    cp -R /tmp/src/def . && \
+    cp -R /tmp/src/env . && \
+    cp -R /tmp/src/data . && \
+    cp -R /tmp/src/resources . && \
+    cp -R /tmp/src/lib . && \
+    cp -R /tmp/src/bin . && \
+    cp -R /tmp/src/install/requirements.txt . && \
+    cp -R /tmp/src/install/pip.conf . && \
+    cp -R /tmp/src/install/pipelines/deploy/unit_test.sh . || : && \
+    find . -name '*.pyc' -delete && \
+    mkdir -p $HOME/.config/pip && cp pip.conf $HOME/.config/pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    mkdir log && chown flaskit log
+
+# for flaskit development only
+RUN [ -z $FLASKIT_DEV_MODE ] && true || ( \
+    mkdir -p /home/flaskit/.config/pip && cp pip.conf /home/flaskit/.config/pip && \
+    pip install --no-cache-dir --upgrade --pre FlaskIT2 && \
+    chown -R flaskit.flaskit /usr/lib/python2.7/site-packages/flaskit /usr/bin/flaskit* && \
+    chown -R flaskit:flaskit . )
+
+RUN apk del python-dev gcc linux-headers libc-dev musl-dev && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
+
+USER 1001
+
+ENV FLASKIT_START_MODE gunicorn
+ENV FLASKIT_GUNICORN_OPTS "-b 0.0.0.0:8080 --threads 5 -w 2"
+
+CMD ["bash", "bin/start.sh"]

@@ -1,0 +1,53 @@
+operationId: BissextPost
+x-path: /bissext
+x-method: post
+summary: Create a resource bissext
+description: |
+  Create a resource bissext
+  (add here additional informations)
+consumes:
+  - application/json
+produces:
+  - application/json
+externalDocs:
+  description: Project repository
+  url: http://github.com/adeo/XXX
+schemes:
+  - http
+  - https
+security: []
+tags:
+  - Bissext
+parameters:
+  - name: Years
+    in: query
+    type: integer
+    description: Year to evaluate
+    pattern: ^\d{1,4}$
+ # - name: body
+ #   in: body
+ #   description : resource properties to create
+ #   schema:
+ #     $ref: '#/definitions/{{ operationId }}Request'
+responses:
+  201:
+    description: "Successfull operation. Return created resource"
+    schema:
+      $ref: '#/definitions/{{ operationId }}Response'
+x-flaskit:
+  enabled: true
+  swagger: true
+  audit: 3
+  stats: true
+  statsd: false
+  dryrun: true
+  cache: 0
+  loglevel: DEBUG
+  logbody: 1
+  logrequest: 3
+  consumer: false
+  consumerName: default
+  consumerMode: "force_async"             # "force_sync", "force_async", "request_choice"
+  # pagination: false
+  # paginationDefaultRange: 0-9              # all | <start>-<end>
+  # paginationArrayPath: "items"

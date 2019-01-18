@@ -1,0 +1,51 @@
+version: '2'
+services:
+  api:
+    image: adeo/First_API
+    build:
+      context: .
+      # centos7/apache/celery  : install/Dockerfile-centos7
+      # alpine/gunicorn/celery : install/Dockerfile-alpine
+      dockerfile: install/Dockerfile-alpine
+    restart: always
+    ports:
+      - 5001:5000
+      - 8080:8080
+    depends_on:
+      - flaskitdb
+    environment:
+      REDIS_HOST: flaskitdb
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+
+    # for debug only
+    #command: /bin/bash
+    #tty: true
+
+  flaskitdb:
+    image: redis:4
+    command: ["redis-server", "--port", "6379"]
+    restart: always
+    ports:
+      - 6379:6379
+
+  consumer:
+    image: adeo/First_API
+    build:
+      context: .
+      # centos7/apache/celery  : install/Dockerfile-centos7
+      # alpine/gunicorn/celery : install/Dockerfile-alpine
+      dockerfile: install/Dockerfile-alpine
+    depends_on:
+    - api
+    - flaskitdb
+    environment:
+      FLASKIT_START_MODE: consumer
+      FLASKIT_CONSUMERS: "*"
+      REDIS_HOST: flaskitdb
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+
+    # for debug only
+    #command: /bin/bash
+    #tty: true

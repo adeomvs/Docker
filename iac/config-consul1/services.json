@@ -1,0 +1,6 @@
+{   
+    "service": {   
+    "name": "awesome-api",   
+    "tags": ["objectiflibre", "API", "restful"],   
+    "port": 7576   } 
+} 

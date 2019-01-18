@@ -1,0 +1,9 @@
+
+apikeys:
+  - name: "<apikey_name>"               # Must match a secret variable that contains apikey value
+    enabled: false
+    description: ""                     # apikey description
+    #expire: ""                         # expiration format : YYYYMMDD
+    roles:                              # roles
+      - id: "monitoring"                
+      

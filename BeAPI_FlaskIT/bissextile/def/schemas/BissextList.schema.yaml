@@ -1,0 +1,24 @@
+definitions:
+
+##### Response fields #####
+{%- set QRType = "Response" %}
+
+  "{{ operationId + QRType }}":
+    description: "Main response structure"
+    type: object
+    additionalProperties: false
+    required: [_metadata, items]
+    properties:
+      items:
+        $ref: "#/definitions/{{ operationId + QRType }}.items"
+      _metadata:
+        $ref: "#/definitions/{{ operationId + QRType }}.metadata"
+
+  "{{ operationId + QRType }}.items":
+    description: "List objects"
+    type: array
+    minItems: 0
+    items:
+      {{ include_file('Bissext.j2.yaml') | indent(6) }}
+
+{{ include_file('BissextResponseMetadata.j2.yaml') | indent(2, first=true) }}

@@ -1,0 +1,51 @@
+operationId: BissextDelete
+x-path: /bissext/{id}
+x-method: delete
+summary: Delete a resource bissext
+description: |
+  Delete a resource bissext
+  (add here additional informations)
+consumes:
+  - application/json
+produces:
+  - application/json
+externalDocs:
+  description: Project repository
+  url: http://github.com/rochacbruno/flasgger
+schemes:
+  - http
+  - https
+security: []
+tags:
+  - Bissext
+parameters:
+  - name: id
+    in: path
+    description : resource id to delete
+    type: string
+    pattern: "^[a-zA-Z0-9-_.]+$"
+    required: true
+responses:
+  200:
+    description: "Successfull operation. Return deleted resource"
+    schema:
+      $ref: '#/definitions/{{ operationId }}Response'
+  404:
+    description: "Resource not found"
+x-flaskit:
+  enabled: true
+  swagger: true
+  audit: 3
+  stats: true
+  statsd: false
+  dryrun: true
+  cache: 0
+  loglevel: DEBUG
+  logbody: 1
+  logrequest: 3
+  consumer: false
+  consumerName: default
+  consumerMode: "force_async"             # "force_sync", "force_async", "request_choice"
+  # pagination: false
+  # paginationDefaultRange: 0-9              # all | <start>-<end>
+  # paginationArrayPath: "items"

@@ -1,0 +1,88 @@
+operationId: HealthGet
+x-path: /_health
+x-method: get
+summary: API health monitoring
+description: |
+  This endpoint execute internal checks to verify healthy of the application
+consumes:
+  - application/json
+produces:
+  - application/json
+externalDocs:
+  description: Project repository
+  url: http://github.com/adeo/XXX
+schemes:
+  - http
+  - https
+security: []
+#  - ApiKeyAuth: []
+tags:
+  - Monitoring
+parameters: []
+definitions:
+  "{{operationId}}Response":
+    description: "Main response structure"
+    type: object
+    additionalProperties: false
+    required: [_metadata, results]
+    properties:
+      results:
+        $ref: "#/definitions/{{operationId}}Response.items"
+      _metadata:
+        $ref: "#/definitions/{{operationId}}Response.metadata"
+  "{{operationId}}Response.items":
+    description: "Checks result"
+    type: array
+    items:
+      description: "Check result"
+      type: object
+      additionalProperties: false
+      required: [id, status, message]
+      properties:
+        id:
+          description: "id of the check"
+          type: string
+        status:
+          description: "status of the check"
+          type: integer
+        message:
+          description: "detail message"
+          type: string
+  "{{operationId}}Response.metadata":
+    description: "Metadata informations"
+    type: object
+    additionalProperties: false
+    required: [uuid]
+    properties:
+      uuid:
+        description: "uniq uuid of transaction"
+        type: string
+      message:
+        description: "output message"
+        type: string
+responses:
+  200:
+    description: Health monitoring succesfully executed
+    schema:
+      $ref: '#/definitions/{{operationId}}Response'
+  500:
+    description: Health monitoring failed
+    schema:
+      $ref: '#/definitions/{{operationId}}Response'
+x-flaskit:
+  enabled: true
+  swagger: true
+  audit: 3
+  stats: true
+  statsd: false
+  dryrun: false
+  cache: 0
+  loglevel: DEBUG
+  logbody: 1
+  logrequest: 3
+  # consumer: false
+  # consumerName: default
+  # consumerMode: "force_sync"             # "force_sync", "force_async", "request_choice"
+  # pagination: false
+  # paginationDefaultRange: 0-9              # all | <start>-<end>
+  # paginationArrayPath: "items"

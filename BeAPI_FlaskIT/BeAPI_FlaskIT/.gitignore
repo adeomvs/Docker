@@ -1,0 +1,7 @@
+*.pyc
+venv/
+.factory.secret
+env/*/secret.cfg
+log/
+flaskcache/
+doc/

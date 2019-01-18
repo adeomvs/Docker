@@ -1,0 +1,6 @@
+<roles enabled="true">
+  <role id="monitoring" enabled="true" options="">
+    <api name="HealthGet" enabled="true" options="default=allow"/>
+  </role>
+</roles>
+

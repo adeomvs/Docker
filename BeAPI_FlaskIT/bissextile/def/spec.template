@@ -1,0 +1,18 @@
+---
+swagger: '2.0'
+basePath: "/"
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-AuthToken
+info:
+  description: "powered by Flaskit"
+  termsOfService: "/tos"
+  contact:
+    email: "apiteam@adeo.com"
+  title: bissext
+  version: "0.1"
+  license:
+    name: "Wiki"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"

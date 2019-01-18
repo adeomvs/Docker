@@ -1,0 +1,63 @@
+version: '3'
+services:
+  consul1:
+    image: consul
+    container_name: consul-server1
+    command: agent -server -bootstrap-expect=3
+    environment:
+      - "CONSUL_BIND_INTERFACE=eth0"
+      - "CONSUL_CLIENT_INTERFACE=eth0"
+    volumes:
+      - "consul-data1:/consul/data"
+      - "$PWD/config-consul1:/consul/config"
+    networks:
+      consul-net:
+        ipv4_address: 192.168.76.2
+  consul2:
+    image: consul
+    container_name: consul-server2
+    command: agent -server -join=192.168.76.2
+    depends_on: 
+      - consul1
+    volumes:
+      - "consul-data2:/consul/data"
+      - "$PWD/config-consul2:/consul/config"
+    networks:
+      - consul-net
+  consul3:
+    image: consul
+    container_name: consul-server3
+    command: agent -server -join=192.168.76.2
+    depends_on: 
+      - consul1
+    volumes:
+      - "consul-data3:/consul/data"
+      - "$PWD/config-consul3:/consul/config"
+    networks:
+      - consul-net
+  consul-client:
+    image: consul
+    container_name: consul_client
+    command: agent -bind=192.168.76.1 -client=192.168.76.1 -ui -retry-join=192.168.76.2
+    network_mode: "host"
+    #environment:
+    #  CONSUL_LOCAL_CONFIG: "{'leave_on_terminate':'true'}"
+  vault:
+    image: vault
+    container_name: vault
+    command: server
+    cap_add:
+      - IPC_LOCK
+    network_mode: "host"
+    environment:
+      - 'VAULT_LOCAL_CONFIG={"backend": {"consul": {"address": "192.168.76.1:8500", "path": "vault/"}}, "default_lease_ttl":"168h", "max_lease_ttl": "720h","listener":{"tcp":{"address":"192.168.76.1:8200","tls_disable":1}}}'
+networks:
+  consul-net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.76.0/24
+volumes:
+  consul-data1:
+  consul-data2:
+  consul-data3:

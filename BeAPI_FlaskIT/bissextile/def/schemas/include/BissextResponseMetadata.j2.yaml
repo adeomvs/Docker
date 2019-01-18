@@ -1,0 +1,9 @@
+"{{ operationId }}Response.metadata":
+  description: "Metadata informations"
+  type: object
+  additionalProperties: false
+  #required: []
+  properties:
+    message:
+      description: "error/information message"
+      type: string

@@ -1,0 +1,5 @@
+# generated file used by beapi-factory
+
+export PROJECT_BU=GOIP
+export PROJECT_NAME=First_API
+export PROJECT_TYPE=FlaskIT

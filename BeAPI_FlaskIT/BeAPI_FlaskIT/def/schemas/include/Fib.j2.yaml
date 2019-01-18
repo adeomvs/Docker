@@ -1,0 +1,29 @@
+# this file descibe a Fib CRUD object
+# it is included by schema files in 'def/apis/' : fibList, fibPost, fibGet, fibDelete, fibPut
+description: "Fib description"
+type: object
+additionalProperties: false
+#required: []
+properties:
+
+# INSERT BUSINESS OBJECT STRUCTURE HERE...
+
+{#- The following condition is evaluated for each endpoint at startup, to include/exclude some attributes inside object schema #}
+{#- This allow to have the same object schema file for many endpoints with little variation according to each endpoint #}
+{%- if operationId + QRType not in ["FibPostRequest", "FibPutRequest", "FibDeleteRequest"] %}
+  # insert property for selected endpoints
+{%- endif %}
+
+  # insert property for all endpoints
+  my_property:
+    x-required: false
+    description: "fib object custom property"
+    type: string
+  n:
+    x-required: true
+    description: "number n for Fibonacci"
+    type: integer
+  fibN:
+    x-required: true
+    description: "Result of Fibonacci"
+    type: integer

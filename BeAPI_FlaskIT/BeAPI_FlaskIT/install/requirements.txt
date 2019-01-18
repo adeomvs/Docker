@@ -1,0 +1,6 @@
+# FlaskIT integration
+#  prod mode :
+#     FlaskIT2>=2.2.0
+#  dev mode :
+#     -e /usr/local/flaskit
+FlaskIT2
