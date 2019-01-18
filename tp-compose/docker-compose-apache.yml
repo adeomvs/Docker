@@ -1,0 +1,31 @@
+version: "2.2"
+services:
+ # Service web, avec construction d'une image
+ wordpress:
+  build:
+   context: /formation/Docker/
+   dockerfile: apache
+  image: apache:1
+  ports:
+   - "80:80"
+  networks:
+   - WordPress-Network
+  volumes:
+   - wordpress-vol:/var/www/html
+ # Service db àartir d'une image
+ mysql:
+  image: mysql:5.7
+  volumes:
+   - mysql-vol:/var/lib/mysql
+  networks:
+   - WordPress-Network
+  environment:
+   MYSQL_ROOT_PASSWORD: password
+   MYSQL_DATABASE: wordpress
+   MYSQL_USER: wordpress
+   MYSQL_PASSWORD: wordpress
+networks:
+ WordPress-Network:
+volumes:
+ mysql-vol:
+ wordpress-vol:
